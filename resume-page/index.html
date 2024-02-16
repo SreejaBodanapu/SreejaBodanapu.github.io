@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+	<title>Sreeja Bodanapu - Resume</title>
+	
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">   
+	<link rel="shortcut icon" href="favicon.ico"> 
+	
+	<!-- Google Fonts -->	
+	<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+	
+	<!-- Bootstrap Icons -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+	
+	<!-- FontAwesome JS -->
+    <script defer src="assets/fontawesome/js/all.js"></script>
+
+	<!-- Theme CSS -->  
+	<link id="theme-style" rel="stylesheet" href="assets/css/risen.css">
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous">
+	</script> 
+	<!-- React library-->
+	<script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+	  <!-- Babel CDN (for JSX) -->
+	  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	  <!-- Axios CDN -->
+	  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	
+</head> 
+
+
+<body>
+	
+	<div class="container-fluid">
+			
+			<div class="main-content-wrapper">
+				<div class="container-fluid">
+					<div class="top-bar text-center position-relative">
+						<div class="top-bar-inner">
+							
+							<ul class="social-list list-inline mx-auto">
+								<li class="list-inline-item me-0 me-md-1 me-lg-2"><a href="#"><i class="fa-brands fa-twitter fa-fw"></i></a></li>
+								<li class="list-inline-item me-0 me-md-1 me-lg-2"><a href="#"><i class="fa-brands fa-github fa-fw"></i></a></li>
+								
+								<li class="list-inline-item me-0 me-md-1 me-lg-2"><a href="#"><i class="fa-brands fa-linkedin-in fa-fw"></i></a></li>
+								
+								<li class="list-inline-item me-0 me-md-1 me-lg-2"><a href="#"><i class="fa-brands fa-stack-overflow fa-fw"></i></a></li>
+								
+							</ul><!--//social-list-->
+							<!-- Add the following code inside your existing HTML body where you want to display the weather information -->
+							<div id="weather-info">
+								<p id="weather-heading">Current Weather in Cincinnati</p><img id="weather-icon" src="" alt="Weather Icon">
+								<span id="weather-description"></span>
+							</div>
+							<script>
+							// Function to fetch weather data and update the weather information
+							$.get("https://api.weatherbit.io/v2.0/current?lat=39.1031&lon=-84.5120&key=68059379be4c48fb958a4978682ad207&units=I", 
+							function(result) {
+								if (result && result.data && result.data.length > 0) {
+									var weatherData = result.data[0];
+									var weatherIcon = weatherData.weather.icon;
+									var weatherDescription = weatherData.weather.description;
+									// Set the weather icon source and alt text
+									$("#weather-icon").attr("src", "https://www.weatherbit.io/static/img/icons/" + weatherIcon + ".png");
+									$("#weather-icon").attr("alt", weatherDescription);
+									// Display the weather description
+									$("#weather-description").text(weatherDescription);
+								}
+							 });
+							 </script>
+
+
+						</div><!--//top-bar-inner-->
+						<div id="msgCookie"></div>
+						<script>
+						function setCookie(name, value, days) {
+							var expires = "";
+							if (days) {
+								var date = new Date();
+								date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+								expires = "; expires=" + date.toUTCString();
+							}
+							document.cookie = name + "=" + (value || "") + expires + "; path=/";
+						}
+				
+						function getCookie(name) {
+							var cookieNameEQ = name + "=";
+							var cookieArray = document.cookie.split(';');
+							for (var i = 0; i < cookieArray.length; i++) {
+							var c = cookieArray[i];
+							while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+							if (c.indexOf(cookieNameEQ) == 0) return c.substring(cookieNameEQ.length, c.length);
+							}
+						return null;
+						}
+						$(document).ready(function() {
+							var lastVisit = getCookie("lastVisit");
+							if (lastVisit) {
+							$("#msgCookie").text("Welcome back! Your last visit was " + lastVisit);
+							} else {
+							setCookie("lastVisit", new Date().toString(), 365);
+							$("#msgCookie").text("Welcome to my homepage!");
+							}
+						});
+						</script>
+
+						<!-- React Function: image from NASA-->
+						<script type="text/babel">
+	function APODApp() {
+	  const [apodData, setAPODData] = React.useState(null);
+  
+	  React.useEffect(() => {
+		fetch(`https://api.nasa.gov/planetary/apod?api_key=1n19XrwMAZvG9J56ufJsWwQcvjXIgREoyltrnRcU`)
+		  .then(response => response.json())
+		  .then(jsonData => setAPODData(jsonData))
+		  .catch(error => console.error('Error fetching APOD data:', error));
+	  }, []);
+  
+	  return (
+		<div>
+		  <h6>Astronomy Picture of the Day from NASA:</h6>
+		  {apodData ? (
+			<div>
+			  <img src={apodData.url} alt={apodData.title} style={{ maxWidth: '14%',maxHeight: '10%', display: 'block', margin: '0 auto' }} />
+			  <p style={{ fontSize: '12px' }}>{apodData.title}</p>
+			</div>
+		  ) : (
+			<p>Loading APOD data...</p>
+		  )}
+		</div>
+	  );
+	}
+  
+	ReactDOM.render(<APODApp />, document.getElementById('nasaReact'));
+  </script>
+  
+
+
+					</div><!--//top-bar-->
+					<style>
+						.resume-profile-pic {
+							border-radius: 50%;
+							width: 150px; 
+							height: 150px; 
+							object-fit: cover; 
+						}
+						#joke-container {
+							background-color: #202a3d; /* Midnight Blue */
+							border-radius: 8px; /* Slightly rounded corners */
+							padding: 15px; /* Padding inside the box */
+							margin: 20px auto; /* Center-align the box horizontally */
+							color: #ffffff; /* Text color */
+							font-family: 'Arial', sans-serif; /* Font family */
+							max-width: 970px; /* Maximum width for better readability */
+						}
+						#clock-container {
+							text-align: center;
+						}
+						#analog-clock {
+							background-color: #202a3d;
+							margin: 0 auto; /* Center align the canvas */
+							display: block; 
+						}
+						#digit-clock {
+							font-size: 13px; 
+						}
+						.resume-degree,
+						.resume-degree-org,
+						.resume-degree-time,
+						.resume-degree-CGPA {
+							font-size: 16px; }
+							#weather-info {
+								background-color: #202a3d; /* Midnight Blue */
+								border-radius: 8px; /* Slightly rounded corners */
+								padding: 15px; /* Padding inside the box */
+								margin: 20px auto; /* Center-align the box horizontally */
+								color: #ffffff; /* Text color */
+								font-family: 'Arial', sans-serif; /* Font family */
+								max-width: 300px; /* Maximum width for better readability */
+								text-align: center; /* Center-align text within the container */
+							}
+							#weather-heading {
+								font-size: 12px; 
+								font-weight: bold;
+								margin-bottom: 10px; 
+							}
+							#weather-icon {
+								max-width: 50px;  
+							}
+							#weather-description {
+								font-size: 12px; 
+								margin-top: 10px; 
+							}
+					</style>
+			
+					<div class="resume-wrapper mx-auto rounded-2">
+						<div class="resume-header px-4 px-lg-5">
+							<div class="resume-profile-holder text-center">
+								<img class="resume-profile-pic rounded-circle" src="assets/images/headshot.jpeg" alt="image">
+								
+								<h2 class="resume-name text-uppercase">Sreeja Bodanapu </h2>
+								<div class="resume-role-title text-uppercase">Graduate Student</div>
+								<div class="resume-contact mt-4">
+									<ul class="resume-contact-list list-unstyled list-inline mb-0 justify-content-between">
+										<li class="list-inline-item me-md-3 me-lg-5"><i class="resume-contact-icon bi bi-telephone-inbound me-2"></i> +1 513-(462)4630</li>
+										<li class="list-inline-item me-md-3 me-lg-5"><i class="resume-contact-icon bi bi-envelope me-2"></i>
+											<span id="email" onclick= "showhideEmail()">Show the contact email</span>
+											<script type="text/javascript" src="email.js"></script></li>
+									</ul>
+								</div><!--//resume-contact-->
+							</div><!--//profile-holder-->
+						</div><!--//resume-header-->
+					<div class="resume-body p-4 p-lg-5">
+							<div class="row">
+								<div class="col-main col-12 col-lg-8 pe-lg-4">
+									<section class="resume-summary-section resume-section">
+										<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-2 py-lg-3"><i class="resume-section-heading-icon bi bi-person me-2"></i>About Me</h3>
+										<div class="resume-summary-desc">
+											Focused and Diligent graduate in Electronics and Communication Engineering. Currently a graduate student in Information Technology. Worked in the Consulting sector and looking forward to learning & exploring other opportunities to excel my skills which helps me to build my professional career.
+										</div>
+									</section><!--//resume-section-->
+									
+									<hr>
+									
+									<section class="resume-experience-section resume-section">
+										<div style="display: flex;">
+											<div style="flex: 8;">
+												<!-- Content for Element 1 -->
+												<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-3"><i class="resume-section-heading-icon bi bi-briefcase me-2"></i>Work Experience </h3>
+											</div>
+											<div style="flex: 1;">
+												<!-- Content for Element 2 -->
+												<div class="featured-image has-ribbon" style="float: right; ">
+													<a href="https://www2.deloitte.com/us/en/pages/technology/topics/workday.html" target="_blank">
+														<img class="img-fluid project-image rounded shadow-sm" src="assets/images/logo-deloitte.jpeg" alt="Company name" style="max-width: 60px; max-height: 60px;"  />
+													</a>
+											</div>
+										</div>
+										</div>
+										
+										<div class="resume-timeline position-relative">
+										    <article class="resume-timeline-item position-relative pb-5">
+											    
+											    <div class="resume-timeline-item-header mb-2">
+												    
+												    <div class="resume-position-meta d-flex justify-content-between mb-1">
+													    <div class="resume-position-time">Sep 2021 to Jul 2023</div>
+													    <div class="resume-company-name">Deloitte USI</div>
+												    </div>
+											        <h3 class="resume-position-title mb-1">Analyst</h3>
+
+											    </div><!--//resume-timeline-item-header-->
+											    <div class="resume-timeline-item-desc">
+													<ul class="resume-timeline-list">
+													    <li>Certified in Workday HCM Consulting core, Integrations and Custom Integrations. </li>
+													    <li>Involved in full cycle including requirement gathering and analysis, design, development, testing and implementation. </li>
+													    <li>Collaborated with clients and external vendors to integrate 26 systems with Workday and optimized the data transfer. </li>
+													    <li>Worked on designing and developing custom integrations using Workday tools like EIBs, Connectors, Studio and APIs. </li>
+													</ul>
+											    </div><!--//resume-timeline-item-desc-->
+												<p><a class="more-link" href="https://www2.deloitte.com/us/en/pages/technology/topics/workday.html" target="_blank"><i class="fas fa-external-link-alt"></i> More about this role</a></p>
+										    </article><!--//resume-timeline-item-->
+										</div><!--//resume-timeline-->
+									</section><!--//resume-experience-section-->
+									<hr>
+
+									<section class="resume-educate-section resume-section">
+										<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-3"><i class="resume-section-heading-icon bi bi-book me-2"></i>Education</h3>
+										<ul class="list-unstyled">
+										    <li class="mb-2">
+										        <div class="resume-degree font-weight-bold">Master of Science in Information Technology</div>
+										        <div class="resume-degree-org">University of Cincinnati</div>
+										        <div class="resume-degree-time">2023-present</div>
+												<div class="resume-degree-CGPA">CGPA: 4</div>
+										    </li>
+										    <li>
+										        <div class="resume-degree font-weight-bold">Bachelor of Technology in Electronics and
+													Communication Engineering</div>
+										        <div class="resume-degree-org">G. Narayanamma Institute of Technology &amp;
+													Science (Affiliated to JNTUH)</div>
+										        <div class="resume-degree-time">2017-2021</div>
+												<div class="resume-degree-CGPA">CGPA: 8.55</div>
+										    </li>
+									    </ul>
+									</section><!--//resume-section-->
+
+									<section class="resume-summary-section resume-section">
+										<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-2 py-lg-3"><i class="resume-section-heading-icon bi bi-book me-2"></i>Courses</h3>
+										<ul class="resume-timeline-list">
+											<li> <b>Topics in Computer System &lpar;<a href="waph.html">Web Application Programming and Hacking Course</a>&rpar;: </b> </li>
+											<p>In this course, we have been studying the basic web application development with front-end (HTML5, JavaScript, CSS) and back-end (PHP/MySQL). The resume web page is created as part of this course</p>
+											<p><a class="more-link" href="https://uc.instructure.com/courses/1683040" target="_blank">
+												<i class="fas fa-external-link-alt"></i> More about this WAPH course</a></p>
+											<li><b>Machine Learning and Data Mining</b></li>
+											<li><b>Principles of Cybersecurity</b></li>
+										</ul>
+									</section><!--//resume-section-->
+
+									<hr>
+									
+								</div><!--//col-8-->
+								<div class="col-12 col-lg-4 ps-lg-4">
+									<div id="digit-clock"></div>
+										<script type="text/javascript">
+										function displayTime(){
+											document.getElementById('digit-clock').innerHTML="Current time: " + new Date();
+										}
+										setInterval(displayTime,500);
+										</script>
+										<!-- Analog clock -->
+										<canvas id="analog-clock" width="130" height="130" style="background-color:#202a3d"></canvas>
+										<script src="https://waph-uc.github.io/clock.js"></script>
+										<script type="text/javascript">
+										var canvas =document.getElementById("analog-clock");
+										var ctx = canvas.getContext("2d");
+										var radius = canvas.height/2;
+										ctx.translate(radius, radius);
+										radius = radius * 0.90;
+										setInterval(drawClock, 1000);
+										function drawClock(){
+											drawFace(ctx, radius);
+											drawNumbers(ctx, radius);
+											drawTime(ctx, radius);
+										}
+										</script>
+									<section class="resume-skills-section resume-section">
+										<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-3"><i class="resume-section-heading-icon bi bi-gear me-2"></i>Coding Skills</h3>
+										<ul class="list-unstyled">
+								        <li class="mb-2">
+								            <div class="resume-skill-name">Python</div>
+											<div class="progress resume-progress" role="progressbar" aria-label="Basic example" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+											  <div class="progress-bar resume-progress-bar" style="width: 70%"></div>
+											</div>
+								        </li>
+								        <li class="mb-2">
+								            <div class="resume-skill-name">Java</div>
+								            <div class="progress resume-progress" role="progressbar" aria-label="Basic example" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+											  <div class="progress-bar resume-progress-bar" style="width: 65%"></div>
+											</div>
+									        
+								        </li>
+								        <li class="mb-2">
+								            <div class="resume-skill-name">MSQL</div>
+									        <div class="progress resume-progress" role="progressbar" aria-label="Basic example" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+											  <div class="progress-bar resume-progress-bar" style="width: 70%"></div>
+											</div>
+								        </li>
+								        <li class="mb-2">
+								            <div class="resume-skill-name">Javascript</div>
+									        <div class="progress resume-progress" role="progressbar" aria-label="Basic example" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+											  <div class="progress-bar resume-progress-bar" style="width: 50%"></div>
+											</div>
+								        </li>
+										<li class="mb-2">
+								            <div class="resume-skill-name">HTML</div>
+									        <div class="progress resume-progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+											  <div class="progress-bar resume-progress-bar" style="width: 75%"></div>
+											</div>
+								        </li>
+
+							        </ul>
+										
+									</section><!--//resume-section-->
+									
+									<hr>
+									
+									<section class="resume-skills-section resume-section">
+										<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-3"><i class="resume-section-heading-icon bi bi-person-gear me-2"></i>Other Skills</h3>
+										<ul class="list-inline">
+								            <li class="list-inline-item"><span class="badge resume-skill-badge">Workday Integrations</span></li>
+								            <li class="list-inline-item"><span class="badge resume-skill-badge">Matlab</span></li>
+											<li class="list-inline-item"><span class="badge resume-skill-badge">Multisim</span></li>
+								            <li class="list-inline-item"><span class="badge resume-skill-badge">Team Player</span></li>			           
+							            </ul>
+									</section><!--//resume-section-->
+									
+									<hr>
+									
+									<section class="resume-projects-section resume-section">
+										<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-3"><i class="resume-section-heading-icon bi bi-code-slash me-2"></i>Projects</h3>
+										<div class="item">
+											<h4 class="item-heading"><i class="item-icon bi bi-square-fill me-2"></i><a href="#">Automatic Announcement System</a></h4>
+											<div class="item-desc">
+												This project is an IOT project that involved creating as small scale web application using PHP, SQL and HTML. It is then embedded with Raspberry PI to record voice and send an announcement at a preset time.
+										</div><!--//item-->
+										<div class="item">
+											<h4 class="item-heading"><i class="item-icon bi bi-square-fill me-2"></i><a href="#">Railway track's crack detection</a></h4>
+											<div class="item-desc">
+												It is purely an Arduino based project that detects the cracks on the railway track and send a message with location of crack to pre-defined contact number
+											</div>
+										</div><!--//item-->
+									
+											
+									</section>
+									
+									<hr>
+									
+									<section class="resume-lang-section resume-section">
+										<h3 class="resume-section-heading text-uppercase py-2 py-lg-3 py-3"><i class="resume-section-heading-icon bi bi-translate me-2"></i>Languages</h3>
+										 <ul class="list-unstyled resume-lang-list">
+										    <li class="mb-2">
+										        <div class="resume-lang-name">English</div>
+										        <div class="resume-level-indicator row gx-0 flex-nowrap">
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-half"></span></div>
+											        <div class="col"><span class="item"></span></div>
+											        <div class="col"><span class="item"></span></div>
+										        </div><!--//resume-level-indicator-->
+										    </li>
+										     <li class="mb-2">
+										        <div class="resume-lang-name">Hindi</div>
+										        <div class="resume-level-indicator row gx-0 flex-nowrap">
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item"></span></div>
+											        <div class="col"><span class="item"></span></div>
+											        <div class="col"><span class="item"></span></div>
+										        </div><!--//resume-level-indicator-->
+										    </li>
+											<li class="mb-2">
+										        <div class="resume-lang-name">Hindi</div>
+										        <div class="resume-level-indicator row gx-0 flex-nowrap">
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item item-full"></span></div>
+											        <div class="col"><span class="item"></span></div>
+										        </div><!--//resume-level-indicator-->
+										    </li>
+											
+										</ul>
+									</section>
+									
+									
+									
+								</div><!--//col-side-->
+							</div><!--//row-->
+					    </div><!--//resume-body-->
+				    </div><!--//resume-wrapper-->
+				</div><!--//container-fluid-->
+			</div><!--//main-content-wrapper-->
+		
+		
+		</div><!--//row-->
+	
+	</div><!--//container-->
+	
+	<footer class="footer text-center py-4">
+		<div id="joke-container"></div>
+		<script>
+
+			function jokeAPI(){
+				$.get("https://v2.jokeapi.dev/joke/Any?type=single", 
+				function(result){
+					 if(result === null || typeof result !== "object" || !result.hasOwnProperty("joke")) {
+						 $("#joke-container").text("Invalid response from the Joke API");
+						 return;
+					 }
+
+				console.log("From jokeAPI: " + JSON.stringify(result));
+				$("#joke-container").text("A Joke for now: " + result.joke);})
+			}
+				 setInterval(jokeAPI,60000);
+		</script>
+		<div id="nasaReact"></div>
+		<a href="https://info.flagcounter.com/0LgX">
+			<img src="https://s01.flagcounter.com/count2/0LgX/bg_202A3D/txt_FFFCF0/border_40547A/columns_2/maxflags_4/viewers_0/labels_0/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0"></a>
+		<small class="credit">Using the design by <a class="theme-link" href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> </small>
+	</footer>
+
+</body>
+</html>
